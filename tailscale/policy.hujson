@@ -18,10 +18,11 @@
 		// Allow all connections.
 		// Comment this section out if you want to define specific restrictions.
 		{"action": "accept", "src": ["*"], "dst": ["*:*"]},
+		{"action": "accept", "src": ["tag:andromeda"], "dst": ["tag:cloud:*"]},
 		{
 			"action": "accept",
 			"src":    ["tag:cloud"],
-			"dst":    ["tag:andromeda:80", "tag:andromeda:443", "tag:andromeda:22"],
+			"dst":    ["tag:andromeda:80", "tag:andromeda:443", "tag:andromeda:22", "tag:andromeda:2377", "tag:andromeda:7946", "tag:andromeda:4789"],
 		},
 
 		// Allow users in "group:example" to access "tag:example", but only from
