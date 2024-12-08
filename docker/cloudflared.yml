@@ -1,0 +1,11 @@
+version: "3"
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run --token
+      eyJhIjoiMTI2M2ViOGJlNDRlNmJiNmJkYzNjODFhZjMwZDdlYmIiLCJ0IjoiZTJkMTkzNTUtNDMzOS00MTdkLWE5MGYtZGMyMWU0NTg4ZmM0IiwicyI6IlptSXpNV1JtTlRndFptTXpaaTAwTWpFekxUazBOall0TTJFM1lUTTJaVGRrTkdSaCJ9
+    networks:
+      - tunnel
+networks:
+  tunnel:
+    driver: overlay
