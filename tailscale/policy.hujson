@@ -7,9 +7,9 @@
 
 	// Define the tags which can be applied to devices and by which users.
 	"tagOwners": {
-		"tag:xing":      ["autogroup:admin"],
 		"tag:andromeda": ["autogroup:admin"],
 		"tag:cloud":     ["autogroup:admin"],
+		"tag:nixos":     ["autogroup:admin"],
 	},
 
 	// Define access control lists for users, groups, autogroups, tags,
