@@ -113,7 +113,7 @@
   ];
   services.moosefs.client.enable = true;
   fileSystems."/mnt/storage" =
-    { device = "127.0.0.1:/";
+    { device = "192.168.0.7:/";
       fsType = "moosefs";
       options = [ "_netdev" ];
     };
