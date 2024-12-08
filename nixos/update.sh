@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /root/repo
+cd /root/infra
 
 git pull
 
