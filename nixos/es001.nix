@@ -129,6 +129,42 @@ Options ExecCGI
 AddHandler cgi-script .cgi .pl'';
     # want ssl + a let's encrypt certificate? add `forceSSL = true;` right here
   };
+  # Keeping this until Docker Swarm is enabled and all data is transfered.
+  services.samba = {
+    enable = true;
+    securityType = "user";
+    openFirewall = true;
+    settings = {
+      global = {
+        "workgroup" = "WORKGROUP";
+        "server string" = "nix-es001";
+        "netbios name" = "nix-es001";
+        "security" = "user";
+        #"use sendfile" = "yes";
+        #"max protocol" = "smb2";
+        # note: localhost is the ipv6 localhost ::1
+        #"hosts allow" = "192.168. 127.0.0.1 localhost";
+        #"hosts deny" = "0.0.0.0/0";
+        "guest account" = "nobody";
+        "map to guest" = "bad user";
+      };
+      "storage" = {
+        "path" = "/mnt/storage";
+        "browseable" = "yes";
+        "read only" = "no";
+        "guest ok" = "no";
+        "create mask" = "0777";
+        "directory mask" = "0777";
+        "force user" = "root";
+        "force group" = "root";
+      };
+    };
+  };
+  
+  services.samba-wsdd = {
+    enable = true;
+    openFirewall = true;
+  };
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
