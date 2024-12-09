@@ -1,0 +1,8 @@
+version: '3.9'
+services:
+  storage-ro:
+    image: httpd:latest
+    ports:
+    - '8080:80'
+    volumes:
+    - /mnt/storage:/usr/local/apache2/
