@@ -13,4 +13,8 @@ services:
     volumes:
       - /mnt/storage/apps/plex/library:/config
       - /mnt/storage/familia:/familia
-    restart: unless-stopped
+    networks:
+      - cloudflared_tunnel
+networks:
+  cloudflared_tunnel:
+    external: true
