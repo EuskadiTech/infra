@@ -6,3 +6,6 @@ services:
     - '8080:80'
     volumes:
     - /mnt/storage:/usr/local/apache2/
+networks:
+  cloudflared_tunnel:
+    external: true
