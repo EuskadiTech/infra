@@ -1,0 +1,54 @@
+version: "3.2"
+services:
+
+  broker:
+    image: redis:6.0
+    networks:
+      - internal
+
+  paperless-webserver:
+    image: linuxserver/paperless-ngx
+    env_file: /mnt/storage/apps/paperless/.env
+    volumes:
+      - /mnt/storage/apps/paperless/data:/usr/src/paperless/data
+      - /mnt/storage/apps/paperless/media:/usr/src/paperless/media
+      - /mnt/storage/apps/paperless/export:/usr/src/paperless/export
+      - /mnt/storage/apps/paperless/consume:/usr/src/paperless/consume
+    deploy:
+      replicas: 1
+    networks:
+      - internal
+      - cloudflared_tunnel
+
+  gotenberg:
+    image: thecodingmachine/gotenberg
+    environment:
+      DISABLE_GOOGLE_CHROME: 1
+    networks:
+      - internal
+
+  tika:
+    image: apache/tika
+    networks:
+      - internal
+
+  db:
+    image: postgres:13
+    volumes:
+      - /mnt/storage/apps/paperless/pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: paperless
+    networks:
+      - internal
+
+
+networks:
+  cloudflared_tunnel:
+    external: true
+  internal:
+    driver: overlay
+    # ipam:
+    #   config:
+    #     - subnet: 172.16.58.0/24
