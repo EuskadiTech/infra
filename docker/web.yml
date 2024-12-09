@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   storage-ro:
-    image: httpd:latest
+    image: httpd:2.4-alpine
     ports:
     - '8080:80'
     volumes:
