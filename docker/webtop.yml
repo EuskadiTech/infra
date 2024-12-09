@@ -10,7 +10,7 @@ services:
       - TITLE=Webtop001 #optional
     volumes:
       - /mnt/storage/apps/webtop/001:/config
-      - /mnt/storage/familia:/familia
+      - /mnt/storage/familia:/config/Desktop/Datos_Familia
     shm_size: "1gb" #optional
     networks:
       - cloudflared_tunnel
