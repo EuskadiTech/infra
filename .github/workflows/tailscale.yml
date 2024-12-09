@@ -3,8 +3,12 @@ name: Sync Tailscale ACLs
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "tailscale/**.yml"
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "tailscale/**.yml"
 
 jobs:
   acls:
