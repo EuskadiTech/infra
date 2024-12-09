@@ -1,0 +1,18 @@
+version: '3'
+services:
+  webtop001:
+    image: lscr.io/linuxserver/webtop:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - SUBFOLDER=/webtop/001/ #optional
+      - TITLE=Webtop001 #optional
+    volumes:
+      - /mnt/storage/webtop/001:/config
+    shm_size: "1gb" #optional
+    networks:
+      - cloudflared_tunnel
+networks:
+  cloudflared_tunnel:
+    external: true
