@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+
+  registry-mirror:
+    image: registry:2
+    networks:
+      - cloudflared_tunnel
+    ports:
+      - 5000:5000
+    volumes:
+      - /mnt/storage/apps/registry/data:/var/lib/registry
+      - /mnt/storage/apps/registry/config.yml:/etc/docker/registry/config.yml
+
+networks:
+  cloudflared_tunnel:
+    external: true
