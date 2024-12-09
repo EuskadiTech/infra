@@ -184,7 +184,9 @@ AddHandler cgi-script .cgi .pl'';
 
   services.tailscale.enable = true;
   virtualisation.docker.enable = true;
-
+  virtualisation.docker.daemon.settings = {
+    registry-mirrors =  [ "http://192.168.0.7:5000/" ];
+  };
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
