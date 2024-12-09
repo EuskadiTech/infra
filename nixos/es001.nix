@@ -162,6 +162,18 @@ AddHandler cgi-script .cgi .pl'';
         "recycle:keeptree" = "yes";
         "recycle:versions" = "yes";
       };
+      "timemachine" = {
+        "path" = "/mnt/storage/timemachine";
+        "public" = "no";
+        "create mask" = "0777";
+        "directory mask" = "0777";
+        "writeable" = "yes";
+        "force user" = "root";
+        "force group" = "root";
+        "fruit:aapl" = "yes";
+        "fruit:time machine" = "yes";
+        "vfs objects" = "catia fruit streams_xattr";
+      };
     };
   };
   
