@@ -107,10 +107,10 @@
   #   "* . rw"
   # ];
 
-  # services.moosefs.chunkserver.enable = true;
-  # services.moosefs.chunkserver.hdds = [
-  #   "/srv/disk002"
-  # ];
+  services.moosefs.chunkserver.enable = true;
+  services.moosefs.chunkserver.hdds = [
+    "/srv/disk003"
+  ];
   services.moosefs.client.enable = true;
   fileSystems."/mnt/storage" =
     { device = "192.168.0.7:/";
