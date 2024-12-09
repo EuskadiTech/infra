@@ -1,4 +1,4 @@
----
+version: '3'
 services:
   storage-ro:
     image: dceoy/nginx-autoindex:latest

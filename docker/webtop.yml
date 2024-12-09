@@ -6,10 +6,10 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Madrid
-      - SUBFOLDER=/webtop/001/ #optional
+      - SUBFOLDER=/apps/webtop/001/ #optional
       - TITLE=Webtop001 #optional
     volumes:
-      - /mnt/storage/webtop/001:/config
+      - /mnt/storage/apps/webtop/001:/config
       - /mnt/storage/familia:/familia
     shm_size: "1gb" #optional
     networks:
