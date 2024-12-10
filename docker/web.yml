@@ -1,7 +1,7 @@
 version: '3'
 services:
   naiel-fyi:
-    image: ghcr.io/naielv/naiel.fyi:main
+    image: ghcr.io/naielv/naiel.fyi:main # forcing update
     networks:
       - cloudflared_tunnel
   storage-ro:
