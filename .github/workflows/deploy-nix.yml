@@ -20,7 +20,8 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      # (Not needed)
+      # - uses: actions/checkout@v4
       - name: Deploy Nix on Nix-ES005
         uses: tiyee/action-ssh@v1.0.1
         with:
