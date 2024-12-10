@@ -1,5 +1,9 @@
 version: '3'
 services:
+  naiel-fyi:
+    image: ghcr.io/naielv/naiel.fyi:main
+    networks:
+      - cloudflared_tunnel
   storage-ro:
     image: dceoy/nginx-autoindex:latest
     ports:
