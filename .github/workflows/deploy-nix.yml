@@ -21,6 +21,13 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      - name: Deploy Nix on Nix-ES005
+        uses: tiyee/action-ssh@v1.0.1
+        with:
+          command: cd /root/infra && git pull && bash deploy-nix.sh
+          host: nix-es005
+          username: root
+          privateKey: ${{ secrets.PRIVATE_KEY }}
       - name: Deploy Nix on Nix-ES004
         uses: tiyee/action-ssh@v1.0.1
         with:
