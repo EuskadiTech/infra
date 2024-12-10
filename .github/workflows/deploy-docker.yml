@@ -27,7 +27,7 @@ jobs:
         uses: tiyee/action-ssh@v1.0.1
         with:
           # Command to execute on the remote server.
-          command: cd /root/infra && git pull && bash deploy-docker.sh
+          command: cd /root/infra && git pull && python3 deploy-docker.py
           # Hostname or IP address of the server.
           host: nix-es001
           # Username for authentication.
