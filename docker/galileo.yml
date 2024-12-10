@@ -1,0 +1,16 @@
+version: "3"
+services:
+  galileo-orch:
+    image: ghcr.io/euskaditech/galileo:main
+    command: python3 orch/main.py
+    networks:
+      - cloudflared_tunnel
+  galileo-001:
+    image: ghcr.io/euskaditech/galileo:main
+    volumes:
+      - /mnt/storage/apps/galileo/001:/data
+    networks:
+      - cloudflared_tunnel
+networks:
+  cloudflared_tunnel:
+    external: true
