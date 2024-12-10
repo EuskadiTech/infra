@@ -9,8 +9,8 @@ services:
       - /dev/video11:/dev/video11 # For Raspberry Pi 4B
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - /path/to/your/config:/config
-      - /path/to/your/storage:/media/frigate
+      - /mnt/storage/apps/frigate/config:/config
+      - /mnt/storage/apps/frigate/storage:/media/frigate
       # - type: tmpfs # Optional: 1GB of memory, reduces SSD/SD Card wear
       #   target: /tmp/cache
       #   tmpfs:

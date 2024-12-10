@@ -130,6 +130,8 @@ Options ExecCGI
 AddHandler cgi-script .cgi .pl'';
     # want ssl + a let's encrypt certificate? add `forceSSL = true;` right here
   };
+  services.httpd.virtualHosts."moosefs.arpa".listen.*.port = 81;
+
   # Keeping this until Docker Swarm is enabled and all data is transfered.
   services.samba = {
     enable = true;
