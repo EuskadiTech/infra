@@ -12,11 +12,12 @@ services:
     volumes:
       - /mnt/storage/apps/authentik/database:/var/lib/postgresql/data
     environment:
-      POSTGRES_PASSWORD: ${PG_PASS:?database password required}
-      POSTGRES_USER: ${PG_USER:-authentik}
-      POSTGRES_DB: ${PG_DB:-authentik}
+      POSTGRES_USER: authentik
+      POSTGRES_DB: authentik
     env_file:
       - /mnt/storage/apps/authentik/.env
+    networks:
+      - internal
   redis:
     image: docker.io/library/redis:alpine
     command: --save 60 1 --loglevel warning
@@ -29,41 +30,42 @@ services:
       timeout: 3s
     volumes:
       - /mnt/storage/apps/authentik/redis:/data
+    networks:
+      - internal
   authentik-server:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.10.5}
+    image: ghcr.io/goauthentik/server:2024.10.5
     restart: unless-stopped
     command: server
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
     volumes:
       - /mnt/storage/apps/authentik/media:/media
       - /mnt/storage/apps/authentik/custom-templates:/templates
     env_file:
       - /mnt/storage/apps/authentik/.env
     ports:
-      - "${COMPOSE_PORT_HTTP:-9000}:9000"
-      - "${COMPOSE_PORT_HTTPS:-9443}:9443"
+      - "9000:9000"
+      - "9443:9443"
     depends_on:
       postgresql:
         condition: service_healthy
       redis:
         condition: service_healthy
     networks:
+      - internal
       - cloudflared_tunnel
   worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2024.10.5}
+    image: ghcr.io/goauthentik/server:2024.10.5
     restart: unless-stopped
     command: worker
     environment:
       AUTHENTIK_REDIS__HOST: redis
       AUTHENTIK_POSTGRESQL__HOST: postgresql
-      AUTHENTIK_POSTGRESQL__USER: ${PG_USER:-authentik}
-      AUTHENTIK_POSTGRESQL__NAME: ${PG_DB:-authentik}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${PG_PASS}
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__NAME: authentik
     # `user: root` and the docker socket volume are optional.
     # See more for the docker socket integration here:
     # https://goauthentik.io/docs/outposts/integrations/docker
@@ -87,6 +89,10 @@ services:
       placement:
         constraints:
           - node.role == manager
+    networks:
+      - internal
 networks:
+  internal:
+    driver: overlay
   cloudflared_tunnel:
     external: true
