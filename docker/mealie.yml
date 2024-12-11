@@ -16,7 +16,7 @@ services:
       PUID: 1000
       PGID: 1000
       TZ: America/Anchorage
-      BASE_URL: https://kr.tech.eus/apps/mealie
+      BASE_URL: https://mealie.tech.eus/
     networks:
       - cloudflared_tunnel
 networks:
