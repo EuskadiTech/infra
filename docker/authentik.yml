@@ -50,10 +50,8 @@ services:
       - "9000:9000"
       - "9443:9443"
     depends_on:
-      postgresql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - postgresql
+      - redis
     networks:
       - internal
       - cloudflared_tunnel
@@ -81,10 +79,8 @@ services:
     env_file:
       - /mnt/storage/apps/authentik/.env
     depends_on:
-      postgresql:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
+      - postgresqly
+      - redis
     deploy:
       placement:
         constraints:
