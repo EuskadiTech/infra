@@ -11,6 +11,11 @@ services:
       - /mnt/storage/apps/galileo/001:/data
     networks:
       - cloudflared_tunnel
+  pluto:
+    image: ghcr.io/euskaditech/galileo:main
+    command: cd /mnt/storage/familia/Sistema/pluto && python3 /mnt/storage/familia/Sistema/pluto/main.py
+    networks:
+      - cloudflared_tunnel
 networks:
   cloudflared_tunnel:
     external: true
