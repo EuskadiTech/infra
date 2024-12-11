@@ -13,7 +13,7 @@ services:
       - cloudflared_tunnel
   pluto:
     image: ghcr.io/euskaditech/galileo:main
-    command: cd /mnt/storage/familia/Sistema/pluto && python3 /mnt/storage/familia/Sistema/pluto/main.py
+    command: python3 /mnt/storage/familia/Sistema/pluto/main.py
     ports:
       - 1129:1129
     networks:
