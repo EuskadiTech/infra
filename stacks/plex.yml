@@ -1,0 +1,22 @@
+version: '3.3'
+services:
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: Europe/Madrid
+      VERSION: docker
+    ports:
+     - 32400:32400
+    volumes:
+     - /mnt/storage/apps/plex/library:/config
+     - /mnt/storage/familia:/familia
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true
+

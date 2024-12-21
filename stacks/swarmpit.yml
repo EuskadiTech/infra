@@ -1,0 +1,86 @@
+version: '3.3'
+services:
+  agent:
+    image: swarmpit/agent:latest
+    environment:
+      DOCKER_API_VERSION: '1.35'
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+     - net
+    logging:
+      driver: journald
+    deploy:
+      mode: global
+      labels:
+        swarmpit.agent: 'true'
+      resources:
+        reservations:
+          memory: 32M
+        limits:
+          memory: 64M
+  db:
+    image: treehouses/couchdb:2.3.1
+    volumes:
+     - /mnt/storage/apps/swarmpit/db-data:/opt/couchdb/data
+    networks:
+     - net
+    logging:
+      driver: journald
+    deploy:
+      resources:
+        reservations:
+          memory: 128M
+        limits:
+          memory: 256M
+  influxdb:
+    image: influxdb:1.7
+    volumes:
+     - /mnt/storage/apps/swarmpit/influx-data:/var/lib/influxdb
+    networks:
+     - net
+    logging:
+      driver: journald
+    deploy:
+      resources:
+        reservations:
+          memory: 128M
+        limits:
+          memory: 256M
+  swarmpit-app:
+    image: swarmpit/swarmpit:latest
+    healthcheck:
+      test:
+       - CMD
+       - curl
+       - -f
+       - http://localhost:8080
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    environment:
+      SWARMPIT_DB: http://db:5984
+      SWARMPIT_INFLUXDB: http://influxdb:8086
+    ports:
+     - 888:8080
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+     - cloudflared_tunnel
+     - net
+    logging:
+      driver: journald
+    deploy:
+      placement:
+        constraints:
+         - node.role == manager
+      resources:
+        reservations:
+          memory: 512M
+        limits:
+          memory: 1024M
+networks:
+  cloudflared_tunnel:
+    external: true
+  net:
+    driver: overlay

@@ -1,0 +1,33 @@
+version: '3.3'
+services:
+  db:
+    image: postgres:15
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_USER: odoo
+    volumes:
+     - /mnt/storage/apps/odoo/db:/var/lib/postgresql/data/pgdata
+    networks:
+     - internal
+    logging:
+      driver: journald
+  odoo:
+    image: odoo:17.0
+    environment:
+      PASSWORD: odoo
+    volumes:
+     - /mnt/storage/apps/odoo/addons:/mnt/extra-addons
+     - /mnt/storage/apps/odoo/config:/etc/odoo
+     - /mnt/storage/apps/odoo/web:/var/lib/odoo
+    networks:
+     - cloudflared_tunnel
+     - internal
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true
+  internal:
+    driver: overlay

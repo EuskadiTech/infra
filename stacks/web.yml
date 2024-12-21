@@ -1,0 +1,48 @@
+version: '3.3'
+services:
+  grav:
+    image: lscr.io/linuxserver/grav:latest
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      TZ: Europe/Madrid
+    ports:
+     - 82:80
+    volumes:
+     - /mnt/storage/apps/grav/euskaditech:/config
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+  etone:
+    image: php:7.2-apache
+    ports:
+     - 84:80
+    volumes:
+     - /mnt/storage/apps/ETOne:/var/www/html
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+  naiel-fyi:
+    image: ghcr.io/naielv/naiel.fyi:main
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+  storage-ro:
+    image: dceoy/nginx-autoindex:latest
+    command:
+     - -g
+     - daemon off;
+    ports:
+     - 8080:80
+    volumes:
+     - /mnt/storage:/var/lib/nginx/html
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true

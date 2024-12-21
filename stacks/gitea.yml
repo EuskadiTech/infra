@@ -1,0 +1,23 @@
+version: '3.3'
+services:
+  gitea:
+    image: gitea/gitea:1.22.6
+    environment:
+      TZ: Europe/Madrid
+      USER_GID: '1000'
+      USER_UID: '1000'
+    ports:
+     - '2222:22'
+    volumes:
+     - /mnt/storage/apps/gitea:/data
+     - /etc/localtime:/etc/localtime:ro
+    networks:
+     - cloudflared_tunnel
+     - gitea
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true
+  gitea:
+    driver: overlay

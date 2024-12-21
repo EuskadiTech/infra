@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  webtop001:
+    image: lscr.io/linuxserver/webtop:latest
+    environment:
+      PGID: '1000'
+      PUID: '1000'
+      SUBFOLDER: /apps/webtop/001/
+      TITLE: Webtop001
+      TZ: Europe/Madrid
+    volumes:
+     - /mnt/storage/apps/webtop/001:/config
+     - /mnt/storage/familia:/config/Desktop/Datos_Familia
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true

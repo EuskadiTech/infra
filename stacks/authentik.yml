@@ -1,0 +1,107 @@
+version: '3.3'
+services:
+  authentik-server:
+    image: ghcr.io/goauthentik/server:2024.10.5
+    command:
+     - server
+    environment:
+      AUTHENTIK_ERROR_REPORTING__ENABLED: 'true'
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: 1iFPNPKfKrAHja0rTngZwCn8r2AUwuOdylBlt8e07VPleEZ
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_SECRET_KEY: SQ4HVps3KMIDO4HRQC2f4XehLLRDxmEMZq5pd8qIc5oPamkVAJo1Oy0X6WrFwMpAh4lFQcMVEoNzbs6
+      COMPOSE_PORT_HTTP: '80'
+      COMPOSE_PORT_HTTPS: '443'
+      POSTGRES_PASSWORD: 1iFPNPKfKrAHja0rTngZwCn8r2AUwuOdylBlt8e07VPleEZ
+    ports:
+     - 9000:9000
+     - 9443:9443
+    volumes:
+     - /mnt/storage/apps/authentik/media:/media
+     - /mnt/storage/apps/authentik/custom-templates:/templates
+    networks:
+     - internal
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+  postgresql:
+    image: postgres:16-alpine
+    healthcheck:
+      test:
+       - CMD-SHELL
+       - pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    environment:
+      AUTHENTIK_ERROR_REPORTING__ENABLED: 'true'
+      AUTHENTIK_POSTGRESQL__PASSWORD: 1iFPNPKfKrAHja0rTngZwCn8r2AUwuOdylBlt8e07VPleEZ
+      AUTHENTIK_SECRET_KEY: SQ4HVps3KMIDO4HRQC2f4XehLLRDxmEMZq5pd8qIc5oPamkVAJo1Oy0X6WrFwMpAh4lFQcMVEoNzbs6
+      COMPOSE_PORT_HTTP: '80'
+      COMPOSE_PORT_HTTPS: '443'
+      POSTGRES_DB: authentik
+      POSTGRES_PASSWORD: 1iFPNPKfKrAHja0rTngZwCn8r2AUwuOdylBlt8e07VPleEZ
+      POSTGRES_USER: authentik
+    volumes:
+     - /mnt/storage/apps/authentik/database:/var/lib/postgresql/data
+    networks:
+     - internal
+    logging:
+      driver: journald
+  redis:
+    image: redis:alpine
+    command:
+     - --save
+     - '60'
+     - '1'
+     - --loglevel
+     - warning
+    healthcheck:
+      test:
+       - CMD-SHELL
+       - redis-cli ping | grep PONG
+      interval: 30s
+      timeout: 3s
+      retries: 5
+    volumes:
+     - /mnt/storage/apps/authentik/redis:/data
+    networks:
+     - internal
+    logging:
+      driver: journald
+  worker:
+    image: ghcr.io/goauthentik/server:2024.10.5
+    command:
+     - worker
+    user: root
+    environment:
+      AUTHENTIK_ERROR_REPORTING__ENABLED: 'true'
+      AUTHENTIK_POSTGRESQL__HOST: postgresql
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: 1iFPNPKfKrAHja0rTngZwCn8r2AUwuOdylBlt8e07VPleEZ
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_REDIS__HOST: redis
+      AUTHENTIK_SECRET_KEY: SQ4HVps3KMIDO4HRQC2f4XehLLRDxmEMZq5pd8qIc5oPamkVAJo1Oy0X6WrFwMpAh4lFQcMVEoNzbs6
+      COMPOSE_PORT_HTTP: '80'
+      COMPOSE_PORT_HTTPS: '443'
+      POSTGRES_PASSWORD: 1iFPNPKfKrAHja0rTngZwCn8r2AUwuOdylBlt8e07VPleEZ
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+     - /mnt/storage/apps/authentik/media:/media
+     - /mnt/storage/apps/authentik/certs:/certs
+     - /mnt/storage/apps/authentik/custom-templates:/templates
+    networks:
+     - internal
+    logging:
+      driver: journald
+    deploy:
+      placement:
+        constraints:
+         - node.role == manager
+networks:
+  cloudflared_tunnel:
+    external: true
+  internal:
+    driver: overlay

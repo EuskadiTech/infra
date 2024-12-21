@@ -1,0 +1,20 @@
+version: '3.3'
+services:
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:stable
+    environment:
+      FRIGATE_RTSP_PASSWORD: password
+    ports:
+     - 8971:8971
+     - 8972:5000
+    volumes:
+     - /etc/localtime:/etc/localtime:ro
+     - /mnt/storage/apps/frigate/config:/config
+     - /mnt/storage/apps/frigate/storage:/media/frigate
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true

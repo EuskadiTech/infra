@@ -1,0 +1,63 @@
+version: '3.3'
+services:
+  broker:
+    image: redis:6.0
+    networks:
+     - internal
+    logging:
+      driver: journald
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_PASSWORD: paperless
+      POSTGRES_USER: paperless
+    volumes:
+     - /mnt/storage/apps/paperless/pgdata:/var/lib/postgresql/data
+    networks:
+     - internal
+    logging:
+      driver: journald
+  gotenberg:
+    image: thecodingmachine/gotenberg:latest
+    environment:
+      DISABLE_GOOGLE_CHROME: '1'
+    networks:
+     - internal
+    logging:
+      driver: journald
+  paperless-webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:latest
+    environment:
+      PAPERLESS_ADMIN_MAIL: naiel.fyi@gmail.com
+      PAPERLESS_ADMIN_PASSWORD: Rubiales26#Ab
+      PAPERLESS_ADMIN_USER: naielv
+      PAPERLESS_DBHOST: db
+      PAPERLESS_OCR_LANGUAGES: spa eng eus
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_TIKA_ENABLED: '1'
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIME_ZONE: Europe/Madrid
+      PAPERLESS_URL: https://paperless.tech.eus
+    volumes:
+     - /mnt/storage/apps/paperless/data:/usr/src/paperless/data
+     - /mnt/storage/apps/paperless/media:/usr/src/paperless/media
+     - /mnt/storage/apps/paperless/export:/usr/src/paperless/export
+     - /mnt/storage/apps/paperless/consume:/usr/src/paperless/consume
+    networks:
+     - cloudflared_tunnel
+     - internal
+    logging:
+      driver: journald
+  tika:
+    image: apache/tika:latest
+    networks:
+     - internal
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true
+  internal:
+    driver: overlay

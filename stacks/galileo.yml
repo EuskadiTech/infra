@@ -1,0 +1,35 @@
+version: '3.3'
+services:
+  galileo-001:
+    image: ghcr.io/euskaditech/galileo:main
+    volumes:
+     - /mnt/storage/apps/galileo/001:/data
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+  galileo-orch:
+    image: ghcr.io/euskaditech/galileo:main
+    command:
+     - python3
+     - orch/main.py
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+  pluto:
+    image: ghcr.io/euskaditech/galileo:main
+    command:
+     - python3
+     - /mnt/storage/familia/Sistema/pluto/main.py
+    ports:
+     - 1129:1129
+    volumes:
+     - /mnt/storage/familia/Sistema/pluto:/mnt/storage/familia/Sistema/pluto
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+networks:
+  cloudflared_tunnel:
+    external: true

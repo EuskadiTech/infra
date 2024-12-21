@@ -1,0 +1,85 @@
+version: '3.3'
+services:
+  database:
+    image: tensorchord/pgvecto-rs:pg14-v0.2.0
+    command:
+     - postgres
+     - -c
+     - shared_preload_libraries=vectors.so
+     - -c
+     - search_path="$$user", public, vectors
+     - -c
+     - logging_collector=on
+     - -c
+     - max_wal_size=2GB
+     - -c
+     - shared_buffers=512MB
+     - -c
+     - wal_compression=on
+    environment:
+      POSTGRES_DB: immich
+      POSTGRES_INITDB_ARGS: --data-checksums
+      POSTGRES_PASSWORD: immich
+      POSTGRES_USER: immich
+    volumes:
+     - /mnt/storage/apps/immich/postgres:/var/lib/postgresql/data
+    networks:
+     - default
+    logging:
+      driver: journald
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    healthcheck:
+      interval: 50s
+      timeout: 10s
+    environment:
+      DB_DATABASE_NAME: immich
+      DB_DATA_LOCATION: ./postgres
+      DB_PASSWORD: immich
+      DB_USERNAME: immich
+      IMMICH_VERSION: release
+      TZ: Europe/Madrid
+      UPLOAD_LOCATION: ./library
+    volumes:
+     - /mnt/storage/apps/immich/cache:/cache
+    networks:
+     - default
+    logging:
+      driver: journald
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:release
+    healthcheck:
+      interval: 50s
+      timeout: 10s
+    environment:
+      DB_DATABASE_NAME: immich
+      DB_DATA_LOCATION: ./postgres
+      DB_PASSWORD: immich
+      DB_USERNAME: immich
+      IMMICH_VERSION: release
+      TZ: Europe/Madrid
+      UPLOAD_LOCATION: ./library
+    ports:
+     - 2283:2283
+    volumes:
+     - /mnt/storage/apps/immich/library:/usr/src/app/upload
+     - /etc/localtime:/etc/localtime:ro
+    networks:
+     - default
+    logging:
+      driver: journald
+  redis:
+    image: redis:6.2-alpine
+    healthcheck:
+      test:
+       - CMD-SHELL
+       - redis-cli ping || exit 1
+      interval: 50s
+      timeout: 10s
+    networks:
+     - default
+    logging:
+      driver: journald
+networks:
+  default:
+    driver: overlay

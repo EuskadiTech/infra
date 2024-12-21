@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command:
+     - tunnel
+     - --no-autoupdate
+     - run
+     - --token
+     - $(cat /TOKENSECRET)
+    networks:
+     - tunnel
+    logging:
+      driver: journald
+    volumes:
+     - /mnt/storage/apps/cloudflared/secret.txt:/TOKENSECRET
+networks:
+  tunnel:
+    driver: overlay

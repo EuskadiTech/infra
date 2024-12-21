@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  mealie:
+    image: ghcr.io/mealie-recipes/mealie:v2.3.0
+    environment:
+      ALLOW_SIGNUP: 'false'
+      BASE_URL: https://mealie.tech.eus/
+      PGID: '1000'
+      PUID: '1000'
+      TZ: America/Anchorage
+    ports:
+     - 9925:9000
+    volumes:
+     - /mnt/storage/apps/mealie/data:/app/data/
+    networks:
+     - cloudflared_tunnel
+    logging:
+      driver: journald
+    deploy:
+      resources:
+        limits:
+          memory: 1000M
+networks:
+  cloudflared_tunnel:
+    external: true

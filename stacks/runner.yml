@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  runner:
+    image: ghcr.io/naielv/docker-swarm-github-actions-runner:master
+    environment:
+      ACCESS_TOKEN_FILE: /run/secrets/github_access-token
+      ORGANIZATION: EuskadiTech
+    volumes:
+     - /var/run/docker.sock:/var/run/docker.sock:ro
+     - /mnt/storage/apps/runner/access-token:/run/secrets/github_access-token:ro
+    networks:
+     - default
+    logging:
+      driver: journald
+    deploy:
+      replicas: 2
+networks:
+  default:
+    driver: overlay
