@@ -66,6 +66,7 @@ services:
      - /etc/localtime:/etc/localtime:ro
     networks:
      - default
+     - cloudflared_tunnel
     logging:
       driver: journald
   redis:
@@ -83,3 +84,5 @@ services:
 networks:
   default:
     driver: overlay
+  cloudflared_tunnel:
+    external: true
