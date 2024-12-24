@@ -189,6 +189,7 @@ AddHandler cgi-script .cgi .pl'';
     openFirewall = true;
   };
 
+  systemd.enableEmergencyMode = false;
   services.tailscale.enable = true;
   virtualisation.docker.enable = true;
   virtualisation.docker.daemon.settings = {
