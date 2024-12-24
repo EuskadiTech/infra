@@ -1,6 +1,6 @@
 import os
 import subprocess
-SSH_USER = "naielv"
+SSH_USER = "root"
 changedFiles = subprocess.run("git diff --name-only HEAD^".split(" "), stdout=subprocess.PIPE).stdout.decode().splitlines()
 print(changedFiles)
 
@@ -15,7 +15,7 @@ for file in changedFiles:
             continue
         print(f"--> deploying")
         os.system("docker stack deploy {name} -c {file}")
-    if file.split("/")[0] == "hosts":
+    if file.split("/")[0] == "nixos":
         print(f"is a nixos config")
         name = file.split("/")[-1].replace(".nix", "")
         if ".ignore" in name:
