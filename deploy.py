@@ -1,7 +1,7 @@
 import os
 import subprocess
 SSH_USER = "naielv"
-changedFiles = subprocess.run("git diff --name-only".split(" "), stdout=subprocess.PIPE).stdout.decode().splitlines()
+changedFiles = subprocess.run("git diff --name-only HEAD^".split(" "), stdout=subprocess.PIPE).stdout.decode().splitlines()
 print(changedFiles)
 
 for file in changedFiles:
@@ -21,8 +21,7 @@ for file in changedFiles:
         if ".ignore" in name:
             print("--> ignoring")
             continue
-        # print(f"--> cannot deploy, not implemented")
-        # TODO: Implement nixos deploy
+        print("--> deploying")
         os.system(f"nixos-rebuild switch --target-host {SSH_USER}@{name} -I nixos-config={file}")
     else:
         print("is unknown")
